@@ -22,4 +22,5 @@ func (table *Goods) TableName() string {
 
 func GetAllGoods() *gorm.DB {
 	tx := DB.Model(&Goods{}).Limit(10).Find(&Goods{})
+	return tx
 }

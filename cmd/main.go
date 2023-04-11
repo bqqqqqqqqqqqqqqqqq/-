@@ -4,5 +4,5 @@ import "dogking_shop/router"
 
 func main() {
 	r := router.Router()
-	r.Run()
+	r.Run(":8888")
 }
