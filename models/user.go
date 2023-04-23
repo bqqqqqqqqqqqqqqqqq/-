@@ -1,8 +1,9 @@
 package models
 
 import (
-	"dogking_shop/define"
-	"dogking_shop/util"
+	"Doggggg/Init"
+	"Doggggg/define"
+	"Doggggg/helping"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"log"
@@ -40,7 +41,7 @@ func AddStudent(c *gin.Context) {
 	username := c.PostForm("username")
 	phone := c.PostForm("phone")
 	password := ""
-	userUUID := util.GetUUID()
+	userUUID := helping.GetUUID()
 	userData := &User{
 		Uuid:      userUUID,
 		Name:      username,
@@ -51,7 +52,7 @@ func AddStudent(c *gin.Context) {
 		UpdatedAt: time.Time{},
 		DeletedAt: gorm.DeletedAt{},
 	}
-	err := DB.Create(&userData).Error
+	err := Init.DB.Create(&userData).Error
 	if err != nil {
 		log.Print(err)
 		c.JSON(http.StatusOK, gin.H{
@@ -62,7 +63,7 @@ func AddStudent(c *gin.Context) {
 
 }
 
-// 分页查询
+// GetAllUser 分页查询
 func GetAllUser(c *gin.Context) {
 	size, _ := strconv.Atoi(c.DefaultQuery("size", define.DefaultSize))
 	page, err := strconv.Atoi(c.DefaultQuery("page", define.DefaultPage))
@@ -72,7 +73,7 @@ func GetAllUser(c *gin.Context) {
 	}
 	page = (page - 1) * size
 	users := make([]*User, 0)
-	tx := DB.Model(&User{}).Offset(page).Limit(10).Omit("password").Find(&users)
+	tx := Init.DB.Model(&User{}).Offset(page).Limit(10).Omit("password").Find(&users)
 	err = tx.Error
 	if err != nil {
 		log.Println("查询错误", err)

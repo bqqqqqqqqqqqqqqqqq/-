@@ -1,6 +1,6 @@
 package main
 
-import "dogking_shop/router"
+import "Doggggg/router"
 
 func main() {
 	r := router.Router()

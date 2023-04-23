@@ -1,8 +1,8 @@
-package util
+package helping
 
 import (
+	"Doggggg/Init"
 	"crypto/md5"
-	"dogking_shop/models"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -19,7 +19,6 @@ type UserClaims struct {
 	Name  string `json:"name"`
 	Phone string `json:"phone"`
 	jwt.StandardClaims
-	jwt.tokenex
 }
 
 // GetMd5
@@ -75,7 +74,7 @@ func SendCodeHelp(c *gin.Context, toUserEmail string, code string) error {
 	if err != nil {
 		return err
 	}
-	models.RDB.Set(c, toUserEmail, code, time.Second*300)
+	Init.RDB.Set(c, toUserEmail, code, time.Second*300)
 	return nil
 }
 

@@ -1,8 +1,8 @@
-package util
+package helping
 
 import "regexp"
 
-// 邮箱正则表达式
+// IsEmail IsEmail 邮箱正则表达式
 func IsEmail(str ...string) bool {
 	if str == nil {
 		return false

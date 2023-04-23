@@ -1,4 +1,4 @@
-package models
+package Init
 
 import (
 	"github.com/go-redis/redis/v8"
@@ -7,11 +7,11 @@ import (
 	"log"
 )
 
-var DB = Init()
+var DB = Mysql()
 
-var RDB = InitRedisDB()
+var RDB = Redis()
 
-func Init() *gorm.DB {
+func Mysql() *gorm.DB {
 	dsn := "root:@tcp(127.0.0.1:3306)/wx?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -20,7 +20,7 @@ func Init() *gorm.DB {
 	return db
 }
 
-func InitRedisDB() *redis.Client {
+func Redis() *redis.Client {
 	var rdb = redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
 		Password: "",

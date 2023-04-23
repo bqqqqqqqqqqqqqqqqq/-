@@ -1,12 +1,13 @@
 package test
 
 import (
-	"dogking_shop/models"
+	"Doggggg/Init"
+	"Doggggg/models"
 	"fmt"
 	"testing"
 )
 
-var db = models.DB
+var db = Init.DB
 
 func TestHomework(t *testing.T) {
 
@@ -21,11 +22,11 @@ func TestHomework(t *testing.T) {
 
 }
 
-func TestGetAllUser(t *testing.T) {
-	users := make([]*models.UserAPI, 0)
-	tx := db.Model(&models.User{}).Limit(10).Find(&users)
-	tx.Order("User.id DESC")
-	for _, v := range users {
-		fmt.Printf("user ===> %v\n", v)
-	}
-}
+//func TestGetAllUser(t *testing.T) {
+//	users := make([]*models.UserAPI, 0)
+//	tx := db.Model(&models.User{}).Limit(10).Find(&users)
+//	tx.Order("User.id DESC")
+//	for _, v := range users {
+//		fmt.Printf("user ===> %v\n", v)
+//	}
+//}

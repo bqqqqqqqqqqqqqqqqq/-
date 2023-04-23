@@ -1,4 +1,4 @@
-module dogking_shop
+module Doggggg
 
 go 1.19
 

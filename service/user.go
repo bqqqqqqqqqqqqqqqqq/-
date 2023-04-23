@@ -1,8 +1,9 @@
 package service
 
 import (
-	"dogking_shop/models"
-	"dogking_shop/util"
+	"Doggggg/Init"
+	"Doggggg/helping"
+	"Doggggg/models"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"log"
@@ -20,16 +21,16 @@ func Ping(c *gin.Context) {
 // SendCode 发送验证码
 func SendCode(c *gin.Context) {
 	email := c.Query("email")
-	if email == "" || !util.IsEmail(email) {
+	if email == "" || !helping.IsEmail(email) {
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
 			"msg":  "邮箱不正确",
 		})
 		return
 	}
-	code := util.GetRand()
-	models.RDB.Set(c, email, code, time.Second*300)
-	err := util.SendCodeHelp(c, email, code)
+	code := helping.GetRand()
+	Init.RDB.Set(c, email, code, time.Second*300)
+	err := helping.SendCodeHelp(c, email, code)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
@@ -65,8 +66,8 @@ func Register(c *gin.Context) {
 	//	return
 	//}
 
-	password = util.GetMd5(password)
-	sysCode, err := models.RDB.Get(c, phone).Result()
+	password = helping.GetMd5(password)
+	sysCode, err := Init.RDB.Get(c, phone).Result()
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
@@ -83,7 +84,7 @@ func Register(c *gin.Context) {
 		return
 	}
 	var cnt int64
-	err = models.DB.Model(new(models.User)).Where("phone = ?", phone).Count(&cnt).Error
+	err = Init.DB.Model(new(models.User)).Where("phone = ?", phone).Count(&cnt).Error
 	if err != nil {
 		log.Printf("错误:%v\n", err)
 		c.JSON(http.StatusOK, gin.H{
@@ -101,7 +102,7 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	userUUID := util.GetUUID()
+	userUUID := helping.GetUUID()
 	userData := &models.User{
 		Uuid:      userUUID,
 		Name:      username,
@@ -112,7 +113,7 @@ func Register(c *gin.Context) {
 		UpdatedAt: time.Time{},
 		DeletedAt: gorm.DeletedAt{},
 	}
-	err = models.DB.Create(&userData).Error
+	err = Init.DB.Create(&userData).Error
 	if err != nil {
 		log.Print(err)
 		c.JSON(http.StatusOK, gin.H{
@@ -120,7 +121,7 @@ func Register(c *gin.Context) {
 		})
 		return
 	}
-	token, err := util.GenerateToken(userUUID, username, phone)
+	token, err := helping.GenerateToken(userUUID, username, phone)
 	if err != nil {
 		log.Print(err)
 		c.JSON(http.StatusOK, gin.H{
@@ -147,10 +148,10 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
-	password = util.GetMd5(password)
+	password = helping.GetMd5(password)
 
 	data := new(models.User)
-	err := models.DB.Where("phone= ? AND password = ? ", phone, password).First(&data).Error
+	err := Init.DB.Where("phone= ? AND password = ? ", phone, password).First(&data).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusOK, gin.H{
@@ -165,7 +166,7 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
-	token, err := util.GenerateToken(data.Uuid, data.Name, phone)
+	token, err := helping.GenerateToken(data.Uuid, data.Name, phone)
 	if err != nil {
 		log.Print(err)
 		c.JSON(http.StatusOK, gin.H{
@@ -190,7 +191,7 @@ func GetUserDetail(c *gin.Context) {
 		return
 	}
 	data := new(models.User)
-	err := models.DB.Omit("password").Where("identity = ? ", identity).Find(&data).Error
+	err := Init.DB.Omit("password").Where("identity = ? ", identity).Find(&data).Error
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
